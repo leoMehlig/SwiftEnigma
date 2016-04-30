@@ -48,16 +48,34 @@ playground.xcworkspace
 # Carthage
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
+Carthage/Checkouts
 Carthage/Build
 
 # fastlane
 #
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the 
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
 # https://github.com/fastlane/fastlane/blob/master/docs/Gitignore.md
 
-fastlane/report.xml
-fastlane/screenshots
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://github.com/fastlane/fastlane/blob/master/docs/Gitignore.md
+
+.fastlane/report.xml
+.fastlane/screenshots
+.fastlane/test_output
+.fastlane/ios_test_output
+.fastlane/build_output
+.fastlane/mac_test_output
+.fastlane/ios_xcov_report
+.fastlane/mac_xcov_report
+
+#Custom fastlane
+*.mobileprovision
+*.cer
+*.certSigningRequest
+*.p12
