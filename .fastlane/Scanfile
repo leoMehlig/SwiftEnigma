@@ -1,0 +1,3 @@
+project "Enigma.xcodeproj"
+slack_url "https://hooks.slack.com/services/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"
+slack_channel "#fastlane"
