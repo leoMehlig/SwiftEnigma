@@ -34,8 +34,8 @@ class ComponentTests: XCTestCase {
     func testAnyCompLazyness() {
         let comp = AnyComponent(
             in: { Int(arc4random_uniform(UInt32($0))) },
-            out: { _ in  0; fatalError() })
-        "abc".encrypt(component: comp, direction: .in)
+            out: { _ in fatalError() })
+        _ = "abc".encrypt(component: comp, direction: .in)
     }
 
 }

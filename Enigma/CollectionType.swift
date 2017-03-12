@@ -7,10 +7,10 @@
 //
 
 extension Collection where Iterator.Element: Encryptable {
-    public func encrypt(enigma: EnigmaType) -> (encrypted: [Iterator.Element], enigma: EnigmaType) {
+    public func encrypt(with enigma: EnigmaType) -> (encrypted: [Iterator.Element], enigma: EnigmaType) {
         return self.reduce((Array<Iterator.Element>(), enigma), { (accu, element) in
-            let newEnigma = accu.1.step(1)
-            let encrypted = element.encrypt(enigma: newEnigma)
+            let newEnigma = accu.1.step(by: 1)
+            let encrypted = element.encrypt(with: newEnigma)
             return (accu.0 + [encrypted], newEnigma)
         })
     }

@@ -16,7 +16,6 @@ public enum Direction: CustomStringConvertible {
         switch self {
         case .in: return `in`()
         case .out: return out()
-            
         }
     }
     

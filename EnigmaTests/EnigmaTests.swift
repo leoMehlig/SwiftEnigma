@@ -16,8 +16,8 @@ class EnigmaTests: XCTestCase {
         let enigma = Enigma(components: [comp, comp, comp], reflect: ref)
         
         for i in 1...4 {
-            let encrypted = i.encrypt(enigma: enigma)
-            XCTAssertEqual(i, encrypted.encrypt(enigma: enigma), "Decrypted value is not the same as original")
+            let encrypted = i.encrypt(with: enigma)
+            XCTAssertEqual(i, encrypted.encrypt(with: enigma), "Decrypted value is not the same as original")
         }
         
     }
@@ -37,9 +37,9 @@ class EnigmaTests: XCTestCase {
         let ref = MapComponent(pairs: [("a", "b"), ("d", "c")])
         let enigma = Enigma(components: [rotor1, rotor2], reflect: ref)
         let string = "abcd"
-        let encrypted = string.encrypt(enigma: enigma)
+        let encrypted = string.encrypt(with: enigma)
 
-        XCTAssertEqual(string, encrypted.encrypt(enigma: enigma), "Decrypted value is not the same as original")
+        XCTAssertEqual(string, encrypted.encrypt(with: enigma), "Decrypted value is not the same as original")
 
     }
     
@@ -48,18 +48,18 @@ class EnigmaTests: XCTestCase {
         let expected = "FTZMGISXIPJWGDNJJCOQTYRIGDMXFIESRWZ".lowercased()
         measure {
             let rotors: [ComponentType] = [StandardRotor.i.component(), StandardRotor.ii.component(), StandardRotor.iii.component()]
-            let ref = StandardReflector.b.component()
+            let ref = StandardReflector.b.component
             let enigma = Enigma(components: rotors, reflect: ref)
-            XCTAssert(string.encrypt(enigma: enigma) == expected, "Wrong encryption")
+            XCTAssert(string.encrypt(with: enigma) == expected, "Wrong encryption")
         }
     }
     
     func testSecodeRotorExtraTurn() {
-        let rotors: [ComponentType] = [StandardRotor.i.component().step(15, index: 0).0, StandardRotor.ii.component().step(3, index: 1).0, StandardRotor.iii.component()]
-        let ref = StandardReflector.b.component()
+        let rotors: [ComponentType] = [StandardRotor.i.component().step(by: 15, atPosition: 0).0, StandardRotor.ii.component().step(by: 3, atPosition: 1).0, StandardRotor.iii.component()]
+        let ref = StandardReflector.b.component
         let enigma = Enigma(components: rotors, reflect: ref)
         let string = "aaaa"
         let expected = "dzgo"
-        XCTAssertEqual(expected, string.encrypt(enigma: enigma), "Wrong encryption")
+        XCTAssertEqual(expected, string.encrypt(with: enigma), "Wrong encryption")
     }
 }

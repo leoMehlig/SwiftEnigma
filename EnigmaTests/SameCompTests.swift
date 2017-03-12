@@ -37,9 +37,9 @@ class SameCompTest: XCTestCase {
     
     func testOneWayEnigma() {
         let enigma = OneWayEnigma(components: [comp, comp, comp])
-        XCTAssert(longString.encrypt(enigma: enigma) == longString, "Long string is not the same after a one to one encryption using three SameComponents in a Enigma!!!")
+        XCTAssert(longString.encrypt(with: enigma) == longString, "Long string is not the same after a one to one encryption using three SameComponents in a Enigma!!!")
         
-        let unequalStrings = randomStrings.flatMap({ $0.encrypt(enigma: enigma) == $0 ? nil : $0 })
+        let unequalStrings = randomStrings.flatMap({ $0.encrypt(with: enigma) == $0 ? nil : $0 })
         XCTAssert(unequalStrings.isEmpty, "The following strings where not the same after SameComp encryption: \(unequalStrings)")
     }
 }

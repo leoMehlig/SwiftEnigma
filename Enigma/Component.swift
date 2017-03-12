@@ -9,14 +9,14 @@
 public typealias DirectedComponent = ((Int) -> Int)
 
 public protocol ComponentType {
-    func encrypt(direction: Direction) -> DirectedComponent
-    func step(_ n: Int, index: Int) -> (ComponentType, Int)
+    func encrypt(with direction: Direction) -> DirectedComponent
+    func step(by steps: Int, atPosition: Int) -> (ComponentType, Int)
 
 }
 
 extension ComponentType {
-    public func step(_ n: Int, index: Int) -> (ComponentType, Int) {
-        return (self, n)
+    public func step(by steps: Int, atPosition: Int) -> (ComponentType, Int) {
+        return (self, steps)
     }
 }
 
@@ -36,7 +36,7 @@ public struct AnyComponent: ComponentType {
         }
     }
     
-    public func encrypt(direction: Direction) -> DirectedComponent {
+    public func encrypt(with direction: Direction) -> DirectedComponent {
         return self.body(direction)
     }
   
@@ -51,12 +51,12 @@ public struct AnySteppableComponent: ComponentType {
         self.stepper = stepper
     }
     
-    public func encrypt(direction: Direction) -> DirectedComponent {
-        return base.encrypt(direction: direction)
+    public func encrypt(with direction: Direction) -> DirectedComponent {
+        return base.encrypt(with: direction)
     }
     
-    public func step(_ n: Int, index: Int) -> (AnySteppableComponent, Int) {
-        return stepper(n, index)
+    public func step(by steps: Int, atPosition: Int) -> (AnySteppableComponent, Int) {
+        return stepper(steps, atPosition)
     }
   
 }
@@ -78,7 +78,7 @@ public struct MapComponent: ComponentType {
         self.outMap = out
     }
     
-    public func encrypt(direction: Direction) -> DirectedComponent {
+    public func encrypt(with direction: Direction) -> DirectedComponent {
         return {
             direction.choose(in: self.inMap[$0], out: self.outMap[$0]) ?? $0
         }
@@ -111,7 +111,7 @@ extension MapComponent {
 
 public struct SameComponent: ComponentType {
     public init() { }
-    public func encrypt(direction _: Direction) -> DirectedComponent {
+    public func encrypt(with _: Direction) -> DirectedComponent {
         return { $0 }
     }
 }
@@ -124,7 +124,7 @@ public struct SuccessComponent: ComponentType {
         self.success = success
     }
     
-    public func encrypt(direction: Direction) -> DirectedComponent {
+    public func encrypt(with direction: Direction) -> DirectedComponent {
         return { index in
             return (0..<self.success).reduce(index, { direction.choose(in: ($0.0 + 1), out: ($0.0 - 1)) })
         }

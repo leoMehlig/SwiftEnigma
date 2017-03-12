@@ -9,7 +9,7 @@
 public enum StandardReflector {
     case a, b, c
     
-    public func component() -> MapComponent {
+    public var component: MapComponent {
         let map: [Int : Int]
         switch self {
         case .a: map = [

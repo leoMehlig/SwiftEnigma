@@ -9,7 +9,7 @@
 public enum StandardRotor {
     case i, ii, iii
     
-    public func component(_ offset: Character = "a") -> RotorComponent {
+    public func component(with offset: Character = "a") -> RotorComponent {
         let map: [Int : Int]
         let outMap: [Int : Int]
         let turnover: Int

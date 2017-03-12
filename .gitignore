@@ -79,3 +79,4 @@ Carthage/Build
 *.cer
 *.certSigningRequest
 *.p12
+.DS_Store

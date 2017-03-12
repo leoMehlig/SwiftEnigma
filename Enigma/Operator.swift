@@ -6,7 +6,7 @@
 //  Copyright © 2016 Leo Mehlig. All rights reserved.
 //
 
-infix operator >>> { associativity left }
+infix operator >>> : DefaultPrecedence
 func >>> <A, B, C>(f: @escaping (B) -> C, g: @escaping (A) -> B) -> (A) -> C {
     return { x in f(g(x)) }
 }

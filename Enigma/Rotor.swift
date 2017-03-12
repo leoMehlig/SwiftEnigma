@@ -11,7 +11,7 @@ public struct RotorComponent: ComponentType {
     let outMap: [Int : Int]
     
     public let offset: Int
-    public fileprivate(set) var position: Int
+    public private(set) var position: Int
     public let turnover: Int
     
     let range: CountableClosedRange<Int>
@@ -41,39 +41,6 @@ public struct RotorComponent: ComponentType {
         self.init(in: map, out: out, offset: offset, position: position, range: min...max, turnover: turnover)
     }
     
-    public var relativePosition: Int { return self.position - self.range.lowerBound }
-    fileprivate var relativeOffset: Int { return self.offset - self.range.lowerBound }
-    
-    public func encrypt(direction: Direction) -> DirectedComponent {
-        return { index in
-            let rotated = self.range.inBounds(index: index + self.relativePosition - self.relativeOffset)
-            let encrypted = direction.choose(in: self.inMap[rotated], out: self.outMap[rotated]) ?? rotated
-            return self.range.inBounds(index: encrypted - self.relativePosition + self.relativeOffset)
-        }
-    }
-    
-    public func step(_ n: Int, index: Int) -> (ComponentType, Int) {
-        let steps: Int = (index == 1 ? self.extraSecodeRotor(n) : 0) + n
-        guard steps > 0 else { return (self, 0) }
-        let newPosition = self.range.inBounds(index: self.position + steps)
-        var newRotor = self
-        newRotor.position = newPosition
-        let next = (newPosition - self.range.lowerBound) / (range.count + 1) + ((self.position < self.turnover && (newPosition >= self.turnover) ? 1 : 0))
-     
-        return (newRotor, next)
-    }
-    
-    fileprivate func extraSecodeRotor(_ n: Int, subtract: Int = 0) -> Int {
-        let extraPosition = self.range.inBounds(index: self.position + max(n - 1, 0))
-        let extra = (extraPosition - self.range.lowerBound) / (range.count + 1) + ((self.position <= self.turnover - 1 && (extraPosition >= self.turnover - 1) ? 1 : 0)) - subtract
-        if extra > 0 {
-            return extra + extraSecodeRotor(n + extra, subtract: extra)
-        }
-        return extra
-    }
-}
-
-extension RotorComponent {
     public init(connections: [Character : Character], offset: Character, turnover: Character) {
         var inMap = [Int : Int]()
         var outMap = [Int : Int]()
@@ -94,5 +61,35 @@ extension RotorComponent {
         self.init(in: inMap, out: outMap, offset: Int(offset.unicodeScalar.value), position: min, range: min...max, turnover: Int(offset.unicodeScalar.value))
         
     }
+    
+    public var relativePosition: Int { return self.position - self.range.lowerBound }
+    private var relativeOffset: Int { return self.offset - self.range.lowerBound }
+    
+    public func encrypt(with direction: Direction) -> DirectedComponent {
+        return { index in
+            let rotated = self.range.inBounds(index: index + self.relativePosition - self.relativeOffset)
+            let encrypted = direction.choose(in: self.inMap[rotated], out: self.outMap[rotated]) ?? rotated
+            return self.range.inBounds(index: encrypted - self.relativePosition + self.relativeOffset)
+        }
+    }
+    
+    public func step(by steps: Int, atPosition: Int) -> (ComponentType, Int) {
+        let realSteps: Int = (atPosition == 1 ? self.extraSecodeRotor(with: steps) : 0) + steps
+        guard realSteps > 0 else { return (self, 0) }
+        let newPosition = self.range.inBounds(index: self.position + realSteps)
+        var newRotor = self
+        newRotor.position = newPosition
+        let next = (newPosition - self.range.lowerBound) / (range.count + 1) + ((self.position < self.turnover && (newPosition >= self.turnover) ? 1 : 0))
+     
+        return (newRotor, next)
+    }
+    
+    fileprivate func extraSecodeRotor(with steps: Int, subtract: Int = 0) -> Int {
+        let extraPosition = self.range.inBounds(index: self.position + max(steps - 1, 0))
+        let extra = (extraPosition - self.range.lowerBound) / (range.count + 1) + ((self.position <= self.turnover - 1 && (extraPosition >= self.turnover - 1) ? 1 : 0)) - subtract
+        if extra > 0 {
+            return extra + extraSecodeRotor(with: steps + extra, subtract: extra)
+        }
+        return extra
+    }
 }
-
