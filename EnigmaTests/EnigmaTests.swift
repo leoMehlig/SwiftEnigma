@@ -36,7 +36,7 @@ class EnigmaTests: XCTestCase {
             "a" : "c"], offset: "d", turnover: "a")
         let ref = MapComponent(pairs: [("a", "b"), ("d", "c")])
         let enigma = Enigma(components: [rotor1, rotor2], reflect: ref)
-        let string = "abcd"       
+        let string = "abcd"
         let encrypted = string.encrypt(enigma: enigma)
 
         XCTAssertEqual(string, encrypted.encrypt(enigma: enigma), "Decrypted value is not the same as original")
@@ -44,19 +44,19 @@ class EnigmaTests: XCTestCase {
     }
     
     func testEnigmaPerformance() {
-        let string = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".lowercaseString
-        let expected = "FTZMGISXIPJWGDNJJCOQTYRIGDMXFIESRWZ".lowercaseString
-        measureBlock {
-            let rotors: [ComponentType] = [StandardRotor.I.component(), StandardRotor.II.component(), StandardRotor.III.component()]
-            let ref = StandardReflector.B.component()
+        let string = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".lowercased()
+        let expected = "FTZMGISXIPJWGDNJJCOQTYRIGDMXFIESRWZ".lowercased()
+        measure {
+            let rotors: [ComponentType] = [StandardRotor.i.component(), StandardRotor.ii.component(), StandardRotor.iii.component()]
+            let ref = StandardReflector.b.component()
             let enigma = Enigma(components: rotors, reflect: ref)
             XCTAssert(string.encrypt(enigma: enigma) == expected, "Wrong encryption")
         }
     }
     
     func testSecodeRotorExtraTurn() {
-        let rotors: [ComponentType] = [StandardRotor.I.component().step(15, index: 0).0, StandardRotor.II.component().step(3, index: 1).0, StandardRotor.III.component()]
-        let ref = StandardReflector.B.component()
+        let rotors: [ComponentType] = [StandardRotor.i.component().step(15, index: 0).0, StandardRotor.ii.component().step(3, index: 1).0, StandardRotor.iii.component()]
+        let ref = StandardReflector.b.component()
         let enigma = Enigma(components: rotors, reflect: ref)
         let string = "aaaa"
         let expected = "dzgo"

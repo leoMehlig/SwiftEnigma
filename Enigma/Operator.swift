@@ -7,20 +7,20 @@
 //
 
 infix operator >>> { associativity left }
-func >>> <A, B, C>(f: B -> C, g: A -> B) -> A -> C {
+func >>> <A, B, C>(f: @escaping (B) -> C, g: @escaping (A) -> B) -> (A) -> C {
     return { x in f(g(x)) }
 }
 
-func + <A: GeneratorType, B: GeneratorType where A.Element == B.Element>(lhs: A, rhs: B) -> AnyGenerator<A.Element> {
+func + <A: IteratorProtocol, B: IteratorProtocol>(lhs: A, rhs: B) -> AnyIterator<A.Element> where A.Element == B.Element {
     var left = lhs
     var right = rhs
-    return AnyGenerator { left.next() ?? right.next() }
+    return AnyIterator { left.next() ?? right.next() }
 }
 
-func + <A: GeneratorType>(lhs: A, rhs: A.Element) -> AnyGenerator<A.Element> {
+func + <A: IteratorProtocol>(lhs: A, rhs: A.Element) -> AnyIterator<A.Element> {
     var left = lhs
     var right: A.Element? = rhs
-    return AnyGenerator {
+    return AnyIterator {
         if let val = left.next() {
             return val
         } else if let val = right {
@@ -31,10 +31,10 @@ func + <A: GeneratorType>(lhs: A, rhs: A.Element) -> AnyGenerator<A.Element> {
     }
 }
 
-func + <A: GeneratorType>(lhs: A.Element, rhs: A) -> AnyGenerator<A.Element> {
+func + <A: IteratorProtocol>(lhs: A.Element, rhs: A) -> AnyIterator<A.Element> {
     var left: A.Element? = lhs
     var right = rhs
-    return AnyGenerator {
+    return AnyIterator {
         if let val = left {
             defer { left = nil }
             return val

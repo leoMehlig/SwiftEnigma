@@ -10,7 +10,7 @@ import XCTest
 import Enigma
 
 class SameCompTest: XCTestCase {
-    let longString = String(String.UnicodeScalarView((0...750).map(UnicodeScalar.init)))
+    let longString = String(String.UnicodeScalarView((0...750).flatMap(UnicodeScalar.init)))
     let randomStrings = [
         "walLhLXKSWkmfrUDdlJWwlAauyRqEllKMHgaSZAlnhBYSmJovWmHhVgDewgstvXvojahEpBlZApKTgqbwSOTguWAfdmSTWjnsMOl",
         "yRkgZtEHsTIiUgumxDXSxkfcCmuTtMNkXblQPdUgdgGkxUDuzHEPOEvIGOrJjdfLNSYCwaWQfYYdCKUBeUFUCIlOVPIgrwWaXuhN",
@@ -20,7 +20,7 @@ class SameCompTest: XCTestCase {
     let comp = SameComponent()
     
     func testSameComponent() {
-        let test: Direction -> () = { direction in
+        let test: (Direction) -> () = { direction in
             XCTAssert(
                 self.longString.encrypt(component: self.comp, direction: direction) == self.longString,
                 "Long string is not the same after a one to one encryption using SameComponent!!! Direction: \(direction)")
@@ -31,8 +31,8 @@ class SameCompTest: XCTestCase {
                 "The following strings where not the same after SmaeComp encryption: \(unequalStrings). Direction: \(direction)")
         }
         
-        test(.In)
-        test(.Out)
+        test(.in)
+        test(.out)
     }
     
     func testOneWayEnigma() {

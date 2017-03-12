@@ -6,4 +6,4 @@
 //  Copyright © 2016 Leo Mehlig. All rights reserved.
 //
 
-func id<T>(t: T) -> T { return t }
+func id<T>(_ t: T) -> T { return t }

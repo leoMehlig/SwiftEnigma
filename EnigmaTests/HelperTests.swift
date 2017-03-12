@@ -14,22 +14,22 @@ class HelperTests: XCTestCase {
     func testRandomStringLength() {
         for _ in 0..<10 {
             let length = Int(arc4random_uniform(10000))
-            let ranStr = String.randomLetters(.Both, length: length)
+            let ranStr = String.randomLetters(.both, length: length)
             XCTAssert(ranStr.characters.count == length, "Random string  dosnt have length \(length). Instead String (\(ranStr)) is \(ranStr.characters.count) long")
         }
     }
     
     func testRandomUpperCaseString() {
         for _ in 0..<10 {
-            let ranStr = String.randomLetters(.Upper, length: 500)
-            XCTAssert(ranStr == ranStr.uppercaseString, "Not every character in the string is uppercase: \(ranStr)")
+            let ranStr = String.randomLetters(.upper, length: 500)
+            XCTAssert(ranStr == ranStr.uppercased(), "Not every character in the string is uppercase: \(ranStr)")
         }
     }
     
     func testRandomLowerCaseString() {
         for _ in 0..<10 {
-            let ranStr = String.randomLetters(.Lower, length: 500)
-            XCTAssert(ranStr == ranStr.lowercaseString, "Not every character in the string is lowercase: \(ranStr)")
+            let ranStr = String.randomLetters(.lower, length: 500)
+            XCTAssert(ranStr == ranStr.lowercased(), "Not every character in the string is lowercase: \(ranStr)")
         }
     }
     
@@ -37,7 +37,7 @@ class HelperTests: XCTestCase {
         let upperRange = ("A".unicodeScalars.first!.value..."Z".unicodeScalars.first!.value)
         let lowerRange = ("a".unicodeScalars.first!.value..."z".unicodeScalars.first!.value)
         for _ in 0..<10 {
-            let ranStr = String.randomLetters(.Both, length: 500)
+            let ranStr = String.randomLetters(.both, length: 500)
             for scalar in ranStr.unicodeScalars {
                 XCTAssert(upperRange ~= scalar.value || lowerRange ~= scalar.value, "No letter characters containt in string: \(ranStr)")
             }

@@ -7,8 +7,8 @@
 //
 
 public protocol EnigmaType {
-    func generateComponents() -> AnyGenerator<DirectedComponent>
-    func step(n: Int) -> Self
+    func generateComponents() -> AnyIterator<DirectedComponent>
+    func step(_ n: Int) -> Self
 }
 
 //MARK: - Implementations
@@ -27,14 +27,14 @@ public struct Enigma: EnigmaType {
         self.init(components: Array(components.dropLast()), reflect: reflect)
     }
     
-    public func generateComponents() -> AnyGenerator<DirectedComponent> {
-        return components.map({ $0.encrypt(direction: .In) }).generate() + reflect.encrypt(direction: .In) + components.reverse().map({ $0.encrypt(direction: .Out) }).generate()
+    public func generateComponents() -> AnyIterator<DirectedComponent> {
+        return components.map({ $0.encrypt(direction: .in) }).makeIterator() + reflect.encrypt(direction: .in) + components.reversed().map({ $0.encrypt(direction: .out) }).makeIterator()
     }
     
-    public func step(n: Int) -> Enigma {
+    public func step(_ n: Int) -> Enigma {
         return Enigma(
-            components: self.components.enumerate().reduce(([ComponentType](), n)) {
-                let element = $1.element.step($0.1, index: $1.index)
+            components: self.components.enumerated().reduce(([ComponentType](), n)) {
+                let element = $1.element.step($0.1, index: $1.offset)
                 return ($0.0 + [element.0], element.1)
             }.0,
             reflect: self.reflect)
@@ -47,11 +47,11 @@ public struct OneWayEnigma: EnigmaType {
     public init(components: [ComponentType]) {
         self.components = components
     }
-    public func generateComponents() -> AnyGenerator<DirectedComponent> {
-        return AnyGenerator(components.map({ $0.encrypt(direction: .In) }).generate())
+    public func generateComponents() -> AnyIterator<DirectedComponent> {
+        return AnyIterator(components.map({ $0.encrypt(direction: .in) }).makeIterator())
     }
     
-    public func step(n: Int) -> OneWayEnigma {
+    public func step(_ n: Int) -> OneWayEnigma {
         return self
     }
 }

@@ -10,10 +10,10 @@ import XCTest
 @testable import Enigma
 class ComponentTests: XCTestCase {
 
-    func testComponent(comp: ComponentType) {
+    func testComponent(_ comp: ComponentType) {
         let testString = String.randomLetters()
-        let inEncrypted = testString.encrypt(component: comp, direction: .In)
-        let outEncrypted = inEncrypted.encrypt(component: comp, direction: .Out)
+        let inEncrypted = testString.encrypt(component: comp, direction: .in)
+        let outEncrypted = inEncrypted.encrypt(component: comp, direction: .out)
         XCTAssertEqual(testString, outEncrypted, "String isnt the same after in out encryption!")
     }
     
@@ -23,7 +23,7 @@ class ComponentTests: XCTestCase {
     
     
     func testSuccessComp() {
-        let test: Int -> () = { success in
+        let test: (Int) -> () = { success in
             self.testComponent(SuccessComponent(success: success))
         }
         for _ in 0..<10 {
@@ -35,7 +35,7 @@ class ComponentTests: XCTestCase {
         let comp = AnyComponent(
             in: { Int(arc4random_uniform(UInt32($0))) },
             out: { _ in  0; fatalError() })
-        "abc".encrypt(component: comp, direction: .In)
+        "abc".encrypt(component: comp, direction: .in)
     }
 
 }

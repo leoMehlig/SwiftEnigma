@@ -7,19 +7,19 @@
 //
 
 public protocol Encryptable {
-    static func encrypt(enigma enigma: EnigmaType) -> (Self -> Self)
-    static func encrypt(dirComp: DirectedComponent) -> (Self -> Self)
-    static func encryptComponent(direction direction: Direction) -> ComponentType -> (Self -> Self)
+    static func encrypt(enigma: EnigmaType) -> ((Self) -> Self)
+    static func encrypt(_ dirComp: @escaping DirectedComponent) -> ((Self) -> Self)
+    static func encryptComponent(direction: Direction) -> (ComponentType) -> ((Self) -> Self)
 }
 
 //MARK: - Default implementations
 
 extension Encryptable {
-    public static func encrypt(enigma enigma: EnigmaType) -> (Self -> Self) {
-        return enigma.generateComponents().reduce(id, combine: { Self.encrypt($1) >>> $0})
+    public static func encrypt(enigma: EnigmaType) -> ((Self) -> Self) {
+        return enigma.generateComponents().reduce(id, { Self.encrypt($1) >>> $0})
     }
     
-    public static func encryptComponent(direction direction: Direction) -> ComponentType -> (Self -> Self) {
+    public static func encryptComponent(direction: Direction) -> (ComponentType) -> ((Self) -> Self) {
         return { component in
             return Self.encrypt(component.encrypt(direction: direction))
         }
@@ -27,11 +27,11 @@ extension Encryptable {
 }
 
 extension Encryptable {
-    public func encrypt(enigma enigma: EnigmaType) -> Self {
+    public func encrypt(enigma: EnigmaType) -> Self {
         return Self.encrypt(enigma: enigma)(self)
     }
     
-    public func encrypt(component component: ComponentType, direction: Direction) -> Self {
+    public func encrypt(component: ComponentType, direction: Direction) -> Self {
         return Self.encryptComponent(direction: direction)(component)(self)
     }
 }
@@ -39,29 +39,32 @@ extension Encryptable {
 //MARK: - Implementations
 
 extension String: Encryptable {
-    public static func encrypt(dirComp: DirectedComponent) -> (String -> String) {
+
+    public static func encrypt(_ dirComp: @escaping DirectedComponent) -> ((String) -> String) {
         return { string in
-            let scalars = string.unicodeScalars.map({ UnicodeScalar(dirComp(Int($0.value))) })
-            return String(UnicodeScalarView(scalars))
+            var scalarView = UnicodeScalarView()
+            scalarView.append(contentsOf: string.unicodeScalars.flatMap({ UnicodeScalar(dirComp(Int($0.value))) }))
+            return String(scalarView)
         }
     }
     
-    public func encrypt(enigma enigma: EnigmaType) -> String {
+    public func encrypt(enigma: EnigmaType) -> String {
         return String(self.characters.encrypt(enigma: enigma).encrypted)
     }
 }
 
 extension Character: Encryptable {
-    public static func encrypt(dirComp: DirectedComponent) -> (Character -> Character) {
+
+    public static func encrypt(_ dirComp: @escaping DirectedComponent) -> ((Character) -> Character) {
         return { char in
             let scalar = dirComp(Int(char.unicodeScalar.value))
-            return Character(UnicodeScalar(scalar))
+            return Character(UnicodeScalar(scalar)!)
         }
     }
 }
 
 extension Int: Encryptable {
-    public static func encrypt(dirComp: DirectedComponent) -> (Int -> Int) {
+    public static func encrypt(_ dirComp: @escaping DirectedComponent) -> ((Int) -> Int) {
         return dirComp
     }
 }

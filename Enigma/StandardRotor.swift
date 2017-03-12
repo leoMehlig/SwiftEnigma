@@ -7,15 +7,15 @@
 //
 
 public enum StandardRotor {
-    case I, II, III
+    case i, ii, iii
     
-    public func component(offset: Character = "a") -> RotorComponent {
+    public func component(_ offset: Character = "a") -> RotorComponent {
         let map: [Int : Int]
         let outMap: [Int : Int]
         let turnover: Int
         
         switch self {
-        case .I:
+        case .i:
             map = [
                 97 : 101,
                 98 : 107,
@@ -74,7 +74,7 @@ public enum StandardRotor {
             ]
             turnover = 114
             
-        case .II:
+        case .ii:
             map = [
                 97 : 97,
                 98 : 106,
@@ -133,7 +133,7 @@ public enum StandardRotor {
             ]
             turnover = 102
             
-        case .III:
+        case .iii:
             map = [
                 97 : 98,
                 98 : 100,
@@ -198,7 +198,7 @@ public enum StandardRotor {
             out: outMap,
             offset: Int(offset.unicodeScalar.value),
             position: 97,
-            range: 97..<122,
+            range: 97...122,
             turnover: turnover)
     }
 }

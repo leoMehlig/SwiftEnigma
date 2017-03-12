@@ -7,23 +7,23 @@
 //
 
 public enum Direction: CustomStringConvertible {
-    case In, Out
+    case `in`, out
     
-    public var isIn: Bool { return self == .In }
-    public var isOut: Bool { return self == .Out }
+    public var isIn: Bool { return self == .in }
+    public var isOut: Bool { return self == .out }
     
-    public func choose<T>(@autoclosure `in`  `in`: () -> T, @autoclosure out: () -> T) -> T {
+    public func choose<T>(`in`: @autoclosure () -> T, out: @autoclosure () -> T) -> T {
         switch self {
-        case .In: return `in`()
-        case .Out: return out()
+        case .in: return `in`()
+        case .out: return out()
             
         }
     }
     
     public var description: String {
         switch self {
-        case .In: return "In"
-        case .Out: return "Out"
+        case .in: return "In"
+        case .out: return "Out"
         }
     }
 }

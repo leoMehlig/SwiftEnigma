@@ -9,18 +9,20 @@
 import Foundation
 extension String {
     public enum Case {
-        case Upper, Lower, Both
-        var isLower: Bool { return self == .Lower || self == .Both }
-        var isUpper: Bool { return self == .Upper || self == .Both }
+        case upper, lower, both
+        var isLower: Bool { return self == .lower || self == .both }
+        var isUpper: Bool { return self == .upper || self == .both }
     }
-    public static func randomLetters(`case`: Case = .Both, length: Int = 100) -> String {
+    public static func randomLetters(_ case: Case = .both, length: Int = 100) -> String {
         let t: [UInt32] = (0..<length).map { _ in
-            let i = arc4random_uniform(`case` == .Both ? 52 : 26) + 65
+            let i = arc4random_uniform(`case` == .both ? 52 : 26) + 65
             //let i = UInt32(`case` == .Both ? 52 : 26) + 65 - 1
             if i <= 90 && `case`.isUpper { return i }
-            else if `case`.isLower { return `case` == .Both ? i + 6 : i + 32 }
+            else if `case`.isLower { return `case` == .both ? i + 6 : i + 32 }
             fatalError("")
         }
-        return String(String.UnicodeScalarView(t.map { UnicodeScalar($0) }))
+        var scalarView = UnicodeScalarView()
+        scalarView.append(contentsOf: t.flatMap { UnicodeScalar($0) })
+        return String(scalarView)
     }
 }

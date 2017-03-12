@@ -7,12 +7,12 @@
 //
 
 public enum StandardReflector {
-    case A, B, C
+    case a, b, c
     
     public func component() -> MapComponent {
         let map: [Int : Int]
         switch self {
-        case .A: map = [
+        case .a: map = [
             101	: 97,
             106	: 98,
             117	: 112,
@@ -40,7 +40,7 @@ public enum StandardReflector {
             105	: 118,
             119	: 107
             ]
-        case .B: map = [
+        case .b: map = [
             117	: 99,
             101	: 113,
             106	: 120,
@@ -68,7 +68,7 @@ public enum StandardReflector {
             105	: 112,
             119	: 118
             ]
-        case .C: map = [
+        case .c: map = [
             106	: 100,
             101	: 105,
             117	: 115,
