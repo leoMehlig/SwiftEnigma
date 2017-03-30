@@ -22,6 +22,34 @@ class EnigmaTests: XCTestCase {
         
     }
     
+    func testFullEnigma() {
+        let plugboard = MapComponent(pairs: [
+            ("a", "q"),
+            ("b", "e"),
+            ("c", "n"),
+            ("d", "p"),
+            ("f", "r"),
+            ("g", "i"),
+            ("h", "u"),
+            ("j", "t"),
+            ("k", "m"),
+            ("l", "w"),
+            ("o", "s"),
+            ("v", "x"),
+            ("y", "z"),
+            ])
+        let rotor1 = StandardRotor.i.component()
+        let rotor2 = StandardRotor.ii.component()
+        let rotor3 = StandardRotor.iii.component()
+        let reflector = StandardReflector.b.component
+        
+        let string = "hellowwdc"
+        let enigma = Enigma(components: [plugboard, rotor1, rotor2, rotor3], reflect: reflector)
+        let encrypted = string.encrypt(with: enigma)
+        XCTAssertEqual(string, encrypted.encrypt(with: enigma), "Decrypted value is not the same as original")
+
+    }
+    
     func testRotorEnigma() {
         let rotor1 = RotorComponent(connections: [
             "a" : "d",
